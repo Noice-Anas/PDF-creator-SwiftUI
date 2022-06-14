@@ -1,24 +1,38 @@
 //
-//  ShareSheet_PDF.swift
-//  PDF creator
+//  ShareSheet.swift
+//  Garage Customer
 //
-//  Created by Noice_anas on 14/06/2022.
+//  Created by Noice_anas on 19/04/2022.
 //
 
+import Foundation
 import SwiftUI
 
-// MARK: Share Sheet
-struct ShareSheet_PDF: UIViewControllerRepresentable{
+struct ShareSheet {
     
-    var urls: [Any]
+    static let instance = ShareSheet()
     
-    func makeUIViewController(context: Context) -> UIActivityViewController {
-        let controller = UIActivityViewController(activityItems: urls, applicationActivities: nil)
-        
-        return controller
+    private init() { }
+    
+    func share(items: [Any]) {
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        UIApplication.shared.currentUIWindow()?.rootViewController?.present(controller, animated: true, completion: nil)
     }
     
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+}
+
+public extension UIApplication {
+    func currentUIWindow() -> UIWindow? {
+        let connectedScenes = UIApplication.shared.connectedScenes
+            .filter({
+                $0.activationState == .foregroundActive})
+            .compactMap({$0 as? UIWindowScene})
+        
+        let window = connectedScenes.first?
+            .windows
+            .first { $0.isKeyWindow }
+
+        return window
         
     }
 }

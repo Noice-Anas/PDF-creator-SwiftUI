@@ -9,8 +9,6 @@ import SwiftUI
 
 struct ContentView: View {
     let filename = "hii everyone this is working"
-    @StateObject var vm = ContentView_ViewModel()
-   
     
     var body: some View {
         ScrollView {
@@ -18,8 +16,7 @@ struct ContentView: View {
             Button {
                 exportPDF(content: {self}, completion: { status , url in
                     if let url = url, status {
-                        vm.PDF_URl = url
-                        vm.showShareSheet = true
+                        ShareSheet.instance.share(items: [url])
                     } else {
                         print("⚠️ Failed to make PDF")
                     }
@@ -31,11 +28,6 @@ struct ContentView: View {
             .buttonStyle(.borderedProminent)
 
         }
-        .sheet(isPresented: $vm.showShareSheet, onDismiss: {vm.PDF_URl = nil}, content: {
-            if let PDF_URl = vm.PDF_URl {
-                ShareSheet_PDF(urls: [PDF_URl])
-            }
-        })
     }
 }
 
@@ -45,8 +37,3 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-
-class ContentView_ViewModel: ObservableObject {
-    @Published var PDF_URl: URL?
-    @Published var showShareSheet = false
-}
