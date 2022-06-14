@@ -14,13 +14,7 @@ struct ContentView: View {
         ScrollView {
                 Text(filename)
             Button {
-                exportPDF(content: {self}, completion: { status , url in
-                    if let url = url, status {
-                        ShareSheet.instance.share(items: [url])
-                    } else {
-                        print("⚠️ Failed to make PDF")
-                    }
-                }, fileName: filename)
+                sharePDF(content: {self}, fileName: filename)
                 
             } label: {
                 Text("click me to share")
@@ -28,6 +22,16 @@ struct ContentView: View {
             .buttonStyle(.borderedProminent)
 
         }
+    }
+    
+    private func sharePDF<Content: View> (@ViewBuilder content: @escaping () -> Content, fileName: String) {
+        exportPDF(content: content, completion: { status , url in
+            if let url = url, status {
+                ShareSheet.instance.share(items: [url])
+            } else {
+                print("⚠️ Failed to make PDF")
+            }
+        }, fileName: fileName)
     }
 }
 
