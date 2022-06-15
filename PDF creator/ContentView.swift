@@ -24,15 +24,7 @@ struct ContentView: View {
         }
     }
     
-    private func sharePDF<Content: View> (@ViewBuilder content: @escaping () -> Content, fileName: String) {
-        exportPDF(content: content, completion: { status , url in
-            if let url = url, status {
-                ShareSheet.instance.share(items: [url])
-            } else {
-                print("⚠️ Failed to make PDF")
-            }
-        }, fileName: fileName)
-    }
+    
 }
 
 struct ContentView_Previews: PreviewProvider {

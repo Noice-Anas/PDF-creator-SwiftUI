@@ -9,6 +9,16 @@ import SwiftUI
 
 extension View{
     
+    func sharePDF<Content: View> (@ViewBuilder content: @escaping () -> Content, fileName: String) {
+        exportPDF(content: content, completion: { status , url in
+            if let url = url, status {
+                ShareSheet.instance.share(items: [url])
+            } else {
+                print("⚠️ Failed to make PDF")
+            }
+        }, fileName: fileName)
+    }
+    
     // MARK: Extracting View's Height and width with the Help of Hosting Controller and ScrollView
     fileprivate func convertToScrollView<Content: View>(@ViewBuilder content: @escaping ()->Content)->UIScrollView{
         
@@ -38,7 +48,7 @@ extension View{
     
     // MARK: Export to PDF
     // MARK: Completion Handler will Send Status and URL
-    func exportPDF<Content: View>(@ViewBuilder content: @escaping ()->Content,completion: @escaping (Bool,URL?)->(), fileName: String){
+    fileprivate func exportPDF<Content: View>(@ViewBuilder content: @escaping ()->Content,completion: @escaping (Bool,URL?)->(), fileName: String){
         
         // MARK: Temp URL
         let documentDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
